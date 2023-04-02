@@ -1,0 +1,27 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+:root {
+  font-size: 62.5%;
+
+  --primary-100: #000f18;
+  --primary-200: #02111b;
+  --primary-300: #0f1d26;
+  --secondary-100: #b70731;
+  --secondary-200: #ee2858;
+  --accent-100: #2781bf;
+  --text-100: #ffffff;
+  --text-200: #89939a;
+  --gray-100: #89939a;
+  --gray-200: rgba(255, 255, 255, 0.2);
+}
+
+body {
+  font-size: 1.6rem;
+  background-color: var(--primary-100);
+}
