@@ -1,0 +1,18 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 750px;
+  height: 100%;
+  background-color: var(--secondary-100);
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+@media (max-width: 768px) {
+  .container {
+    display: none;
+  }
+}
