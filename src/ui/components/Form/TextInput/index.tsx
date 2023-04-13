@@ -1,50 +1,58 @@
-import { useState } from "react";
+import React, { forwardRef, useState } from "react";
 import styles from "./styles.module.scss";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 
 type InputType = "text" | "password" | "email";
 
-interface InputProps {
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   type?: InputType;
   label?: string;
   placeholder?: string;
   icon?: React.ReactNode;
   autoFocus?: boolean;
+  helperText?: string;
+  error?: boolean;
 }
 
-function TextInput({
-  type = "text",
-  label,
-  placeholder,
-  icon,
-  autoFocus,
-}: InputProps) {
-  const [hiddenText, setHiddenText] = useState<boolean>(false);
+const TextInput = forwardRef<HTMLInputElement, InputProps>(
+  ({ type = "text", label, icon, helperText, error, ...rest }, ref) => {
+    const [hiddenText, setHiddenText] = useState<boolean>(true);
 
-  const changeTextVisibility = () => {
-    setHiddenText(!hiddenText);
-  };
+    const changeTextVisibility = () => {
+      setHiddenText(!hiddenText);
+    };
 
-  return (
-    <label className={styles.label}>
-      {label}
-      <div className={styles.inputWrapper}>
-        {icon}
-        <input
-          type={hiddenText ? "text" : type}
-          className={styles.input}
-          placeholder={placeholder}
-          autoFocus={autoFocus}
-        />
-        {type === "password" &&
-          (hiddenText ? (
-            <FiEye onClick={changeTextVisibility} />
-          ) : (
-            <FiEyeOff onClick={changeTextVisibility} />
-          ))}
-      </div>
-    </label>
-  );
-}
+    return (
+      <label className={styles.label}>
+        {label}
+        <div
+          className={styles.inputWrapper}
+          style={{ borderColor: error ? "#b70731" : "transparent" }}
+        >
+          {icon}
+          <input
+            ref={ref}
+            type={!hiddenText ? "text" : type}
+            className={styles.input}
+            {...rest}
+          />
+          {type === "password" &&
+            (hiddenText ? (
+              <FiEyeOff
+                style={{ cursor: "pointer" }}
+                onClick={changeTextVisibility}
+              />
+            ) : (
+              <FiEye
+                style={{ cursor: "pointer" }}
+                onClick={changeTextVisibility}
+              />
+            ))}
+        </div>
+        <p className={styles.errorMessage}>{helperText}</p>
+      </label>
+    );
+  }
+);
 
 export default TextInput;
