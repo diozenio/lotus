@@ -7,9 +7,7 @@ type InputType = "text" | "password" | "email";
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   type?: InputType;
   label?: string;
-  placeholder?: string;
   icon?: React.ReactNode;
-  autoFocus?: boolean;
   helperText?: string;
   error?: boolean;
 }
