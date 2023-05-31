@@ -30,7 +30,7 @@ function Title({
       break;
   }
 
-  const style = appendClassNames([styles.title, textSize, className!]);
+  const style = appendClassNames([styles.title, textSize, className || ""]);
 
   return <h1 className={style}>{children}</h1>;
 }

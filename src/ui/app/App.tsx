@@ -1,9 +1,10 @@
 import "./global.scss";
+import Cover from "@components/Cover";
 
 function App() {
   return (
-    <div>
-      <h1>App</h1>
+    <div style={{ height: "100vh" }}>
+      <Cover></Cover>
     </div>
   );
 }

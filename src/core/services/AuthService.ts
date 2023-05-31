@@ -19,7 +19,7 @@ class AuthService extends AuthUseCase {
     const authResponse = await this.adapter.login(credentials);
     CacheService.saveAuthResponse(authResponse);
     this.configureAuthorization(authResponse);
-    return this.findUserById(authResponse.refreshToken?.id!);
+    return this.findUserById(authResponse.refreshToken?.userId!);
   }
 
   async configureAuthorization(authResponse: AuthResponse): Promise<void> {
