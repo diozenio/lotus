@@ -22,9 +22,16 @@
   --gray-200: rgba(255, 255, 255, 0.05);
 }
 
+#root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
 body {
   font-size: 1.6rem;
   background-color: var(--primary-100);
+  height: 100svh;
 }
 
 input:-webkit-autofill,
