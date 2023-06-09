@@ -4,16 +4,17 @@ import { FiEye, FiEyeOff } from "react-icons/fi";
 
 type InputType = "text" | "password" | "email";
 
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface InputProps {
   type?: InputType;
   label?: string;
   icon?: React.ReactNode;
   helperText?: string;
   error?: boolean;
+  htmlInputProps?: React.InputHTMLAttributes<HTMLInputElement>;
 }
 
 const TextInput = forwardRef<HTMLInputElement, InputProps>(
-  ({ type = "text", label, icon, helperText, error, ...rest }, ref) => {
+  ({ type = "text", label, icon, helperText, error, htmlInputProps }, ref) => {
     const [hiddenText, setHiddenText] = useState<boolean>(true);
 
     const changeTextVisibility = () => {
@@ -32,7 +33,7 @@ const TextInput = forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             type={!hiddenText ? "text" : type}
             className={styles.input}
-            {...rest}
+            {...htmlInputProps}
           />
           {type === "password" &&
             (hiddenText ? (
