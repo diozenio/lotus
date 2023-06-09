@@ -1,12 +1,8 @@
+import SignInPage from "@pages/Auth/SignIn";
 import "./global.scss";
-import Cover from "@components/Cover";
 
 function App() {
-  return (
-    <div style={{ height: "100vh" }}>
-      <Cover></Cover>
-    </div>
-  );
+  return <SignInPage />;
 }
 
 export default App;
