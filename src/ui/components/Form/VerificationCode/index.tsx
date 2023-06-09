@@ -45,7 +45,7 @@ const VerificationCode: React.FC<VerificationCodeProps> = ({
   return (
     <div className={containerStyles}>
       <Description size="sm" className={styles.infoText}>
-        Confirme sua conta através do código enviado ao seu e-mail.
+        Digite o código de verificação enviado para o seu e-mail
       </Description>
       <a onClick={onResendCode} className={styles.resendCode}>
         <TfiReload size={18} style={{ marginBottom: 1 }} />
