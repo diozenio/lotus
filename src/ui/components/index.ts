@@ -5,5 +5,15 @@ import TextInput from "@components/Form/TextInput";
 import Button from "@components/Form/Button";
 import Stepper from "@components/SignUp/Stepper";
 import UploadAvatar from "@components/Form/UploadAvatar";
+import VerificationCode from "@components/Form/VerificationCode";
 
-export { Cover, Description, Title, TextInput, Button, Stepper, UploadAvatar };
+export {
+  Cover,
+  Description,
+  Title,
+  TextInput,
+  Button,
+  Stepper,
+  UploadAvatar,
+  VerificationCode,
+};
