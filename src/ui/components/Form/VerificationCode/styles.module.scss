@@ -53,13 +53,6 @@
   }
 }
 
-.mobileInfoText {
+.infoText {
   text-align: center;
-  margin-bottom: 16px;
-}
-
-@media (min-width: 768px) {
-  .mobileInfoText {
-    display: none;
-  }
 }

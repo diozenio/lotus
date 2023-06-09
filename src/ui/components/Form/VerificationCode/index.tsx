@@ -44,7 +44,7 @@ const VerificationCode: React.FC<VerificationCodeProps> = ({
 
   return (
     <div className={containerStyles}>
-      <Description className={styles.mobileInfoText}>
+      <Description size="sm" className={styles.infoText}>
         Confirme sua conta através do código enviado ao seu e-mail.
       </Description>
       <a onClick={onResendCode} className={styles.resendCode}>
@@ -55,6 +55,7 @@ const VerificationCode: React.FC<VerificationCodeProps> = ({
         {code.map((digit, index) => (
           <input
             key={index}
+            name={`digit-${index}`}
             type="text"
             maxLength={1}
             value={digit}
