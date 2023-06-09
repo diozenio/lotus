@@ -17,11 +17,11 @@ function Button({
     color === "secondary" ? styles.secondary : styles.primary;
   return (
     <button
-      className={appendClassNames([
+      className={appendClassNames(
         styles.button,
         buttonColorStyle,
-        className!,
-      ])}
+        className || ""
+      )}
       {...rest}
     >
       {children}

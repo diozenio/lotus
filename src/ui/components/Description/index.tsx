@@ -15,7 +15,13 @@ function Description({
   const textSize = size === "sm" ? styles.sm : styles.lg;
 
   return (
-    <p className={appendClassNames([styles.description, textSize, className!])}>
+    <p
+      className={appendClassNames(
+        styles.description,
+        textSize,
+        className || ""
+      )}
+    >
       {children}
     </p>
   );
