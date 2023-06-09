@@ -1,0 +1,12 @@
+.dashedDivider {
+  height: 44px;
+  width: 1px;
+  border: 1px dashed var(--secondary-300);
+  margin-left: 44px;
+}
+.filledDivider {
+  height: 44px;
+  width: 2px;
+  background-color: var(--secondary-300);
+  margin-left: 44px;
+}

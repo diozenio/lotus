@@ -1,0 +1,26 @@
+.stepContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.indexContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 88px;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  background-color: transparent;
+  border: 2px dashed var(--secondary-300);
+}
+
+.filled {
+  background-color: var(--secondary-300);
+}
+
+.stepText {
+  text-align: left;
+}
