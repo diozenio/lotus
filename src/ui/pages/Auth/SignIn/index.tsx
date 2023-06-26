@@ -1,13 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Button,
   Description,
-  Stepper,
   TextInput,
   Title,
   Cover,
-  UploadAvatar,
-  VerificationCode,
 } from "@components/index";
 import styles from "./styles.module.scss";
 
