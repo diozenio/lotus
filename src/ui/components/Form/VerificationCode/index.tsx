@@ -40,13 +40,10 @@ const VerificationCode: React.FC<VerificationCodeProps> = ({
     }
   };
 
-  const containerStyles = appendClassNames(styles.container, className!);
+  const containerStyles = appendClassNames(styles.container, className || "");
 
   return (
     <div className={containerStyles}>
-      <Description size="sm" className={styles.infoText}>
-        Digite o código de verificação enviado para o seu e-mail
-      </Description>
       <a onClick={onResendCode} className={styles.resendCode}>
         <TfiReload size={18} style={{ marginBottom: 1 }} />
         Reenviar código
