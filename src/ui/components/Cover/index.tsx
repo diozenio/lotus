@@ -1,6 +1,18 @@
 import { PropsWithChildren } from "react";
 import styles from "./styles.module.scss";
+import { appendClassNames } from "@utils/className";
 
-export default function Cover({ children }: PropsWithChildren) {
-  return <div className={styles.container}>{children}</div>;
+interface CoverProps {
+  className?: string;
+}
+
+export default function Cover({
+  children,
+  className,
+}: PropsWithChildren<CoverProps>) {
+  return (
+    <div className={appendClassNames(styles.container, className || "")}>
+      {children}
+    </div>
+  );
 }
