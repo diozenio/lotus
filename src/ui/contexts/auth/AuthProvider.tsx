@@ -6,6 +6,7 @@ import AuthUseCase from "@interfaces/useCases/AuthUseCase";
 import { ErrorHandler } from "ui/errors/ErrorHandler";
 import { toast } from "react-toastify";
 import CacheService from "@services/CacheService";
+import { useNavigate } from "react-router-dom";
 
 interface AuthProviderProps {
   service: AuthUseCase;
@@ -15,7 +16,8 @@ function AuthProvider({
   children,
   service,
 }: PropsWithChildren<AuthProviderProps>) {
-  const [user, setUser] = useState<User | null>();
+  const [user, setUser] = useState<User | null>(null);
+  const navigate = useNavigate();
 
   const logout = useCallback(async () => {
     try {
@@ -34,6 +36,7 @@ function AuthProvider({
     try {
       const response = await service.login(credentials);
       setUser(response);
+      navigate("/");
     } catch (error) {
       panic(error);
     }
@@ -58,20 +61,31 @@ function AuthProvider({
   }, []);
 
   const cachedUser = CacheService.getAuthResponse();
-  if (cachedUser && !user) {
+  if (cachedUser && user === null) {
     service
       .configureAuthorization(cachedUser)
       .then(() => {
         findUserById(cachedUser?.refreshToken?.userId!);
+        navigate("/"); // Block access to auth pages
       })
       .catch((error: unknown) => {
         panic(error);
       });
   }
 
+  const isAuthenticating = user === null && cachedUser !== undefined;
+
   return (
     <AuthCTX.Provider
-      value={{ findUserById, logout, signIn, signUp, user, panic }}
+      value={{
+        findUserById,
+        logout,
+        signIn,
+        signUp,
+        user,
+        panic,
+        isAuthenticating,
+      }}
     >
       {children}
     </AuthCTX.Provider>
