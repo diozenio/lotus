@@ -41,7 +41,9 @@ class AuthAPI extends AuthAdapter {
   }
 
   async findUserById(userId: string): Promise<User> {
-    const response = await BackendClient.get<DTO>(`/users/${userId}}`);
+    const response = await BackendClient.post<DTO>(`/user/info`, {
+      userId: userId,
+    });
     return User.fromJSON(response.data);
   }
 }
