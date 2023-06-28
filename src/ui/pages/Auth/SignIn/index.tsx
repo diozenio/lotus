@@ -7,8 +7,11 @@ import {
   Cover,
 } from "@components/index";
 import styles from "./styles.module.scss";
+import { useNavigate } from "react-router-dom";
 
 function SignInPage() {
+  const navigate = useNavigate();
+
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   };
@@ -60,7 +63,12 @@ function SignInPage() {
             }}
             type="password"
           />
-          <a className={styles.forgotPassword}>
+          <a
+            onClick={() => {
+              navigate("/forgot-password");
+            }}
+            className={styles.forgotPassword}
+          >
             Esqueceu a senha? <span>Clique aqui</span>
           </a>
 
@@ -68,7 +76,11 @@ function SignInPage() {
             Avançar
           </Button>
         </form>
-        <a>
+        <a
+          onClick={() => {
+            navigate("/register");
+          }}
+        >
           Ainda não possui uma conta?{" "}
           <span className={styles.registerAnchor}>Cadastre-se agora</span>
         </a>
