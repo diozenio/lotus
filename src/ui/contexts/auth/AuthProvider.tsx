@@ -9,9 +9,18 @@ import CacheService from "@services/CacheService";
 function AuthProvider({ children }: PropsWithChildren) {
   const [user, setUser] = useState<User | null>();
 
-  let cachedUser = CacheService.getAuthResponse();
+  const logout = useCallback(async () => {
+    try {
+      await service.logout(user?.id!);
+      setUser(null);
+    } catch (error) {
+      toast.error("Não foi possível realizar a operação.");
+    }
+  }, []);
 
-  const authService = new AuthService(new AuthAPI());
+  const panic = useCallback((error: unknown) => {
+    ErrorHandler.handleError(error, logout);
+  }, []);
 
   const signIn = useCallback(async (credentials: Credentials) => {
     try {

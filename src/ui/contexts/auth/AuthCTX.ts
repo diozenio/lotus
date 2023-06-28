@@ -8,7 +8,7 @@ interface Props {
   signIn: (credentials: Credentials) => Promise<void>;
   findUserById: (userID: string) => Promise<void>;
   logout: () => Promise<void>;
-  panic(err: unknown): Promise<boolean>;
+  panic(err: unknown): void;
 }
 
 export const AuthCTX = createContext<Props>({} as Props);
