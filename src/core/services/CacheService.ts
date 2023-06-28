@@ -3,11 +3,11 @@ import AuthResponse from "@models/auth/AuthResponse";
 
 class CacheService extends CacheUseCase {
   static saveAuthResponse(authResponse: AuthResponse): void {
-    localStorage.setItem("authResponse", JSON.stringify(authResponse));
+    localStorage.setItem("session", JSON.stringify(authResponse));
   }
 
   static getAuthResponse(): AuthResponse | undefined {
-    const authResponse = localStorage.getItem("authResponse");
+    const authResponse = localStorage.getItem("session");
     if (authResponse) {
       return AuthResponse.fromJSON(JSON.parse(authResponse));
     }
@@ -15,7 +15,7 @@ class CacheService extends CacheUseCase {
   }
 
   static clearUser(): void {
-    localStorage.removeItem("authResponse");
+    localStorage.removeItem("session");
   }
 }
 

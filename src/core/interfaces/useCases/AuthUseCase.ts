@@ -10,7 +10,7 @@ abstract class AuthUseCase {
   abstract login(credentials: Credentials): Promise<User>;
   abstract logout(userId: string): Promise<void>;
   abstract configureAuthorization(authResponse: AuthResponse): Promise<void>;
-  abstract updateToken(cachedUser: AuthResponse): Promise<boolean>;
+  abstract updateToken(cachedUser: AuthResponse): Promise<void>;
   abstract findUserById(userID: string): Promise<User>;
 }
 

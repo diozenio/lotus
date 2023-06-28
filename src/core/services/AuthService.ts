@@ -2,58 +2,56 @@ import Credentials from "@models/auth/Credentials";
 import AuthUseCase from "@interfaces/useCases/AuthUseCase";
 import User from "@models/auth/User";
 import CacheService from "@services/CacheService";
-import dayjs from "dayjs";
 import AuthResponse from "@models/auth/AuthResponse";
+import { verifyRefreshTokenExpiration } from "@utils/verifyRefreshTokeExpiration";
 
 class AuthService extends AuthUseCase {
   async register(user: User): Promise<User> {
     const response = await this.adapter.register(user);
-    const credentials = Credentials.fromJSON({
-      email: response.email,
-      password: response.password,
-    });
-    return this.login(credentials);
+    return this.login(
+      Credentials.fromJSON({
+        email: response.email,
+        password: response.password,
+      })
+    );
   }
 
   async login(credentials: Credentials): Promise<User> {
     const authResponse = await this.adapter.login(credentials);
-    CacheService.saveAuthResponse(authResponse);
     this.configureAuthorization(authResponse);
+    CacheService.saveAuthResponse(authResponse);
     return this.findUserById(authResponse.refreshToken?.userId!);
   }
 
-  async configureAuthorization(authResponse: AuthResponse): Promise<void> {
-    const refreshTokenExpired = dayjs().isAfter(
-      dayjs.unix(authResponse.refreshToken?.expiresIn!)
+  configureAuthorization(authResponse: AuthResponse): Promise<void> {
+    const refreshTokenExpired = verifyRefreshTokenExpiration(
+      authResponse.refreshToken?.expiresIn!
     );
 
     if (refreshTokenExpired) {
-      await this.updateToken(authResponse);
-      const newAuthResponse = CacheService.getAuthResponse();
-      this.adapter.saveAuthorizationHeader(newAuthResponse?.token!);
-      return;
+      return Promise.resolve(this.updateToken(authResponse));
     }
 
-    this.adapter.saveAuthorizationHeader(authResponse.token);
+    return Promise.resolve(
+      this.adapter.saveAuthorizationHeader(authResponse.token)
+    );
   }
 
-  async updateToken(cachedUser: AuthResponse): Promise<boolean> {
-    if (!cachedUser) return true;
-    if (cachedUser?.refreshToken) {
-      const newAuthResponse = await this.adapter.updateToken(
-        cachedUser?.refreshToken
-      );
-      if (!newAuthResponse.refreshToken) {
-        const appendRefreshToken = AuthResponse.fromJSON({
-          token: newAuthResponse.token,
-          refreshToken: cachedUser.refreshToken,
-        });
-        CacheService.saveAuthResponse(appendRefreshToken);
-        return false;
-      }
-      CacheService.saveAuthResponse(newAuthResponse);
+  async updateToken(cachedUser: AuthResponse): Promise<void> {
+    const newAuthResponse = await this.adapter.updateToken(
+      cachedUser?.refreshToken!
+    );
+    if (!newAuthResponse.refreshToken) {
+      const appendRefreshToken = AuthResponse.fromJSON({
+        token: newAuthResponse.token,
+        refreshToken: cachedUser.refreshToken,
+      });
+      CacheService.saveAuthResponse(appendRefreshToken);
+      this.configureAuthorization(appendRefreshToken);
+      return;
     }
-    return false;
+    CacheService.saveAuthResponse(newAuthResponse);
+    this.configureAuthorization(newAuthResponse);
   }
 
   async logout(userId: string): Promise<void> {
