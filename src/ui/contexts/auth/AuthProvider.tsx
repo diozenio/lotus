@@ -35,8 +35,10 @@ function AuthProvider({
   const signIn = useCallback(async (credentials: Credentials) => {
     try {
       const response = await service.login(credentials);
-      setUser(response);
-      navigate("/");
+      if (response) {
+        setUser(response);
+        navigate("/");
+      }
     } catch (error) {
       panic(error);
     }
@@ -45,7 +47,10 @@ function AuthProvider({
   const signUp = useCallback(async (user: User) => {
     try {
       const response = await service.register(user);
-      setUser(response);
+      if (response) {
+        setUser(response);
+        navigate("/");
+      }
     } catch (error) {
       panic(error);
     }
