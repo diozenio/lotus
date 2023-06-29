@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import {
   Button,
   Description,
@@ -8,13 +8,33 @@ import {
 } from "@components/index";
 import styles from "./styles.module.scss";
 import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { signInSchema } from "./SignInFormSchema";
+import Credentials from "@models/auth/Credentials";
+import { useAuth } from "@contexts/auth/AuthCTX";
+
+type FormProps = z.infer<typeof signInSchema>;
 
 function SignInPage() {
   const navigate = useNavigate();
+  const { signIn } = useAuth();
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormProps>({
+    mode: "onSubmit",
+    reValidateMode: "onChange",
+    resolver: zodResolver(signInSchema),
+  });
+
+  const handleForm = useCallback(async (data: FormProps) => {
+    const credentials = Credentials.fromForm(data);
+    await signIn(credentials);
+  }, []);
 
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -28,6 +48,8 @@ function SignInPage() {
       if (nextIndex < inputs.length) {
         const nextInput = inputs[nextIndex] as HTMLInputElement;
         nextInput.focus();
+      } else if (nextIndex === inputs.length) {
+        handleSubmit(handleForm)();
       }
     }
   };
@@ -44,15 +66,21 @@ function SignInPage() {
             Preencha os campos com os dados da sua conta
           </Description>
         </header>
-        <form onSubmit={onSubmit} className={styles.form}>
+        <form onSubmit={handleSubmit(handleForm)} className={styles.form}>
           <TextInput
             label="E-mail"
             htmlInputProps={{
               placeholder: "Digite seu email",
               autoComplete: "off",
               onKeyDown: handleInputKeyDown,
+              autoFocus: true,
+              name: "email",
+              id: "email",
             }}
+            error={!!errors.email?.message}
+            helperText={errors.email?.message}
             type="email"
+            {...register("email")}
           />
           <TextInput
             label="Senha"
@@ -61,7 +89,10 @@ function SignInPage() {
               autoComplete: "off",
               onKeyDown: handleInputKeyDown,
             }}
+            error={!!errors.password?.message}
+            helperText={errors.password?.message}
             type="password"
+            {...register("password")}
           />
           <a
             onClick={() => {
