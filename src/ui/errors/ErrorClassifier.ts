@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import { ErrorType } from "./types";
 
 export class ErrorClassifier {
@@ -21,6 +22,9 @@ export class ErrorClassifier {
           break;
         case ErrorType.InvalidDataError:
           errorMessage = "Dados inválidos";
+          break;
+        case ErrorType.NetworkError:
+          errorMessage = "Não foi possível conectar ao servidor";
           break;
       }
     } else if (typeof error === "string") {

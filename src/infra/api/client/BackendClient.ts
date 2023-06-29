@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 export const BackendClient = axios.create({
   baseURL: `http://localhost:3000/api`,
@@ -16,7 +16,7 @@ BackendClient.interceptors.response.use(
 
     return response;
   },
-  (error) => {
-    return Promise.reject(new Error(error.response.data.error));
+  (error: AxiosError) => {
+    return Promise.reject(new Error(error.message));
   }
 );
