@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   Button,
   Description,
@@ -10,6 +10,12 @@ import {
   VerificationCode,
 } from "@components/index";
 import styles from "./styles.module.scss";
+import { z } from "zod";
+import { signUpSchema } from "./SignUpFormSchema";
+import { useAuth } from "@contexts/auth/AuthCTX";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import User from "@models/auth/User";
 
 const stepHeaders = [
   {
@@ -26,16 +32,39 @@ const stepHeaders = [
   },
 ];
 
+type FormProps = z.infer<typeof signUpSchema>;
+
 function SignUpPage() {
   const [currentPage, setCurrentPage] = useState(0);
+  const { signUp } = useAuth();
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    trigger,
+  } = useForm<FormProps>({
+    mode: "all",
+    reValidateMode: "onChange",
+    resolver: zodResolver(signUpSchema),
+  });
 
-  const nextPage = () => {
-    if (currentPage < 2) {
-      setCurrentPage((prevPage) => prevPage + 1);
+  const handleForm = useCallback(async (data: FormProps) => {
+    const user = User.fromForm(data);
+    await signUp(user);
+  }, []);
+
+  const isLastPage = currentPage === 2;
+  const nextButtonText = isLastPage ? "Finalizar" : "Avançar";
+
+  const nextPage = async () => {
+    const isValid = await trigger();
+    if (isValid) {
+      if (currentPage < 2) {
+        setCurrentPage((prevPage) => prevPage + 1);
+      } else if (isLastPage) {
+        handleSubmit(handleForm)();
+      }
     }
   };
 
@@ -61,9 +90,6 @@ function SignUpPage() {
     }
   };
 
-  const isLastPage = currentPage === 2;
-  const nextButtonText = isLastPage ? "Finalizar" : "Avançar";
-
   return (
     <div className={styles.container}>
       <Cover>
@@ -82,7 +108,7 @@ function SignUpPage() {
             horizontal
           />
         </header>
-        <form onSubmit={onSubmit} className={styles.form}>
+        <form onSubmit={handleSubmit(handleForm)} className={styles.form}>
           <div
             className={currentPage !== 0 ? styles.hidden : styles.inputGroup}
           >
@@ -90,36 +116,47 @@ function SignUpPage() {
               label="Nome"
               htmlInputProps={{
                 placeholder: "Digite seu nome",
-                autoComplete: "off",
+                autoComplete: "signup-name",
                 onKeyDown: handleInputKeyDown,
               }}
+              error={!!errors.name?.message}
+              helperText={errors.name?.message}
+              {...register("name")}
             />
             <TextInput
               label="E-mail"
               htmlInputProps={{
                 placeholder: "Digite seu email",
-                autoComplete: "off",
+                autoComplete: "signup-email",
                 onKeyDown: handleInputKeyDown,
               }}
               type="email"
+              error={!!errors.email?.message}
+              helperText={errors.email?.message}
+              {...register("email")}
             />
             <TextInput
               label="Senha"
               htmlInputProps={{
                 placeholder: "Digite sua senha",
-                autoComplete: "off",
+                autoComplete: "new-password",
                 onKeyDown: handleInputKeyDown,
               }}
               type="password"
+              error={!!errors.password?.message}
+              helperText={errors.password?.message}
+              {...register("password")}
             />
             <TextInput
               label="Confirmar senha"
               htmlInputProps={{
                 placeholder: "Digite sua senha novamente",
-                autoComplete: "off",
                 onKeyDown: handleInputKeyDown,
               }}
               type="password"
+              error={!!errors.confirmPassword?.message}
+              helperText={errors.confirmPassword?.message}
+              {...register("confirmPassword")}
             />
           </div>
           <UploadAvatar
