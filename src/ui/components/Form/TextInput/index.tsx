@@ -14,7 +14,10 @@ interface InputProps {
 }
 
 const TextInput = forwardRef<HTMLInputElement, InputProps>(
-  ({ type = "text", label, icon, helperText, error, htmlInputProps }, ref) => {
+  (
+    { type = "text", label, icon, helperText, error, htmlInputProps, ...rest },
+    ref
+  ) => {
     const [hiddenText, setHiddenText] = useState<boolean>(true);
 
     const changeTextVisibility = () => {
@@ -34,6 +37,7 @@ const TextInput = forwardRef<HTMLInputElement, InputProps>(
             type={!hiddenText ? "text" : type}
             className={styles.input}
             {...htmlInputProps}
+            {...rest}
           />
           {type === "password" &&
             (hiddenText ? (
